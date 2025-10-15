@@ -58,6 +58,13 @@
             transition: all 0.4s ease;
         }
 
+        /* Estilos para o menu mobile aberto */
+        header.nav-open .nav-links,
+        header.nav-open .nav-cta {
+            display: flex;
+            transform: translateX(0);
+        }
+
         header.scrolled {
             padding: 0.5rem 0;
             background: rgba(10, 10, 10, 0.98);
@@ -187,6 +194,7 @@
             position: relative;
             display: flex;
             align-items: center;
+            padding-top: 100px; /* Ajusta o conteúdo para baixo */
             justify-content: center;
             overflow: hidden;
             background: linear-gradient(rgba(10, 10, 10, 0.8), rgba(10, 10, 10, 0.9)), 
@@ -201,17 +209,23 @@
         }
 
         .hero-barber-pole-icon {
-            width: 150px;
-            height: 150px;
+            width: 180px;
+            height: 180px;
             margin: 0 auto 2.5rem;
             opacity: 0;
-            filter: drop-shadow(0 0 15px rgba(212, 175, 55, 0.4));
+            filter: drop-shadow(0 0 20px rgba(212, 175, 55, 0.6));
             animation: fadeUp 1s ease 0.2s forwards, bounce 4s ease-in-out infinite 1.2s;
             object-fit: cover;
             border-radius: 50%;
-            border: 4px solid var(--gold);
+            border: 6px solid var(--gold);
         }
 
+        @media (max-width: 480px) {
+            .hero-barber-pole-icon {
+                width: 140px;
+                height: 140px;
+            }
+        }
         .hero h1 {
             font-size: 4.5rem;
             margin-bottom: 1.5rem;
@@ -335,6 +349,12 @@
             pointer-events: none;
         }
 
+        @media (max-width: 480px) {
+            .social-balloon {
+                width: 50px;
+                height: 50px;
+            }
+        }
         .social-balloon:hover .social-tooltip {
             opacity: 1;
         }
@@ -848,11 +868,41 @@
         @media (max-width: 768px) {
             .nav-links,
             .nav-cta {
+                flex-direction: column;
+                position: fixed;
+                top: 0;
+                right: 0;
+                height: 100vh;
+                width: 70%;
+                max-width: 320px;
+                background: rgba(15, 15, 15, 0.95);
+                backdrop-filter: blur(15px);
+                padding: 6rem 2rem 2rem;
+                gap: 2rem;
+                align-items: flex-start;
+                transform: translateX(100%);
+                transition: transform 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+            }
+
+            .nav-links,
+            .nav-cta {
                 display: none;
             }
 
             .mobile-menu {
                 display: block;
+            }
+
+            .nav-cta {
+                top: auto;
+                bottom: 0;
+                height: auto;
+                width: 100%;
+                max-width: none;
+                padding: 1.5rem 2rem;
+                background: rgba(10, 10, 10, 0.9);
+                border-top: 1px solid rgba(212, 175, 55, 0.2);
+                transform: translateY(100%);
             }
 
             .hero h1 {
@@ -879,14 +929,6 @@
             .about-stats {
                 grid-template-columns: 1fr;
                 gap: 1.5rem;
-            }
-
-            .social-float {
-                top: auto;
-                bottom: 20px;
-                flex-direction: row;
-                right: 50%;
-                transform: translateX(50%);
             }
         }
     </style>
@@ -939,10 +981,6 @@
             <img src="logo.jpg" alt="Logo da Barbearia" class="hero-barber-pole-icon">
             <h1>Estilo & Tradição em Cada Corte</h1>
             <p> Barbearia Cardoso combina a arte tradicional da barbearia com as tendências mais modernas, oferecendo uma experiência única de cuidado masculino.</p>
-            <div class="hero-btns">
-                <button class="btn btn-primary js-scroll-to-contact">Agendar Horário</button>
-                <button class="btn btn-outline js-scroll-to-services">Conhecer Serviços</button>
-            </div>
         </div>
         
     </section>
@@ -1260,33 +1298,14 @@
 
         // Mobile menu toggle
         document.querySelector('.mobile-menu').addEventListener('click', function() {
-            const navLinks = document.querySelector('.nav-links');
-            const navCta = document.querySelector('.nav-cta');
-            
-            navLinks.style.display = navLinks.style.display === 'flex' ? 'none' : 'flex';
-            navCta.style.display = navCta.style.display === 'flex' ? 'none' : 'flex';
-            
-            if (navLinks.style.display === 'flex') {
-                navLinks.style.flexDirection = 'column';
-                navLinks.style.position = 'absolute';
-                navLinks.style.top = '100%';
-                navLinks.style.left = '0';
-                navLinks.style.width = '100%';
-                navLinks.style.background = 'rgba(10, 10, 10, 0.98)';
-                navLinks.style.padding = '2rem';
-                navLinks.style.gap = '1.5rem';
-                navLinks.style.backdropFilter = 'blur(10px)';
-                
-                navCta.style.flexDirection = 'column';
-                navCta.style.position = 'absolute';
-                navCta.style.top = 'calc(100% + 200px)';
-                navCta.style.left = '0';
-                navCta.style.width = '100%';
-                navCta.style.background = 'rgba(10, 10, 10, 0.98)';
-                navCta.style.padding = '2rem';
-                navCta.style.gap = '1rem';
-                navCta.style.backdropFilter = 'blur(10px)';
-            }
+            document.getElementById('header').classList.toggle('nav-open');
+        });
+
+        // Close mobile menu when a link is clicked
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', () => {
+                document.getElementById('header').classList.remove('nav-open');
+            });
         });
 
         // Scroll to contact form for scheduling buttons
